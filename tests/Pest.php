@@ -1,5 +1,5 @@
 <?php
 
-use VendorName\Skeleton\Tests\TestCase;
+use SwissDevjoy\BladeStaticcacheDirective\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

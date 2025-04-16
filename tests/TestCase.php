@@ -1,37 +1,30 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace SwissDevjoy\BladeStaticcacheDirective\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
+use SwissDevjoy\BladeStaticcacheDirective\BladeStaticcacheDirectiveServiceProvider;
+use SwissDevjoy\BladeStaticcacheDirective\BladeStaticcacheStatsMiddleware;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-    }
-
     protected function getPackageProviders($app)
     {
         return [
-            SkeletonServiceProvider::class,
+            BladeStaticcacheDirectiveServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        $app['config']->set('view.paths', [__DIR__.'/resources/views']);
 
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
+        Route::any('/middleware-test', ['middleware' => BladeStaticcacheStatsMiddleware::class, fn () => '']);
+    }
+
+    protected function renderCacheView()
+    {
+        return trim((string) view('cache'));
     }
 }
