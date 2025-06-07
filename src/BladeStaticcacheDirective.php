@@ -28,6 +28,10 @@ class BladeStaticcacheDirective
     {
         return '<?php
                     $__cache_directive_buffer = ob_get_clean();
+                    
+                    if (config("blade-staticcache-directive.strip_whitespace_between_tags")) {
+                        $__cache_directive_buffer = preg_replace("/>\s+</s", "><", $__cache_directive_buffer);
+                    }
 
                     File::put($__cache_directive_file, $__cache_directive_buffer);
 
